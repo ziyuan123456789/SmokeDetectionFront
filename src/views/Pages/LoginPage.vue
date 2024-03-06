@@ -1,7 +1,7 @@
 <template>
   <div class="back">
     <el-form ref="form" :model="form" :rules="rules" class="login-box" style=" opacity: 0.95;background-color: #FFFFFF;">
-      <h3 class="login-title" >欢迎登录</h3>
+      <h3 class="login-title">欢迎登录</h3>
       <br>
       <el-form-item label="账号" prop="name">
         <el-input v-model="form.name"></el-input>
@@ -17,25 +17,24 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item>
-        <div style="text-align: center;">
-          <el-button type="primary" @click="submitForm()">确定</el-button>
-          <el-button>取消</el-button>
-        </div>
 
-      </el-form-item>
+      <div style="text-align: center;">
+        <el-button type="primary" @click="submitForm()">确定</el-button>
+        <el-button>取消</el-button>
+      </div>
+
+
     </el-form>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import { get, post, del, put } from '@/utils/request';
 import { ElMessage } from 'element-plus'
 export default {
   name: "Login",
   data() {
     return {
-      BASE_URL : 'http://localhost:8089/',
       form: {
         name: '',
         password: '',
@@ -56,34 +55,33 @@ export default {
   },
   methods: {
     submitForm() {
-      const that=this
-      axios.get(this.BASE_URL+'checkLogin', {
-        params: {
-          username: this.form.name,
-          password: this.form.password,
-          role: this.form.role
+      get('/checkLogin', {
+        username: this.form.name,
+        password: this.form.password,
+        role: this.form.role
+      }, false).then(response => {
+        if (response.data.success === true) {
+          localStorage.setItem('loginData', JSON.stringify(response.data.data));
+          ElMessage({
+            message: '登录成功',
+            type: 'success',
+          });
+          this.$router.push("/");
+        } else {
+          ElMessage({
+            message: '登录失败',
+            type: 'error',
+          });
         }
-      })
-        .then(function (response) {
-          if (response.data.success == true) {
-            localStorage.setItem('token', response.data.data.token);
-            ElMessage({
-              message: '登录成功',
-              type: 'success',
-            })
-            that.$router.push('/main') 
-          } else {
-            ElMessage({
-              message: '登录失败',
-              type: 'warning',
-            })
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+      }).catch(error => {
+        console.log(error)
+        ElMessage({
+          message: '登录异常，请稍后再试',
+          type: 'error',
         });
+      });
     }
-  },
+  }
 
 
 
@@ -92,7 +90,6 @@ export default {
 </script>
 
 <style>
-
 .login-box {
   width: 350px;
   margin: 120px auto;
@@ -107,6 +104,7 @@ export default {
   text-align: center;
   opacity: 1;
 }
+
 .back {
   position: fixed;
   top: 0;
@@ -117,7 +115,7 @@ export default {
   z-index: -10;
   zoom: 1;
 
-  background-image: url(https://images.unsplash.com/photo-1527314392553-2c7bded21b23?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80) ;
+  background-image: url(https://images.unsplash.com/photo-1527314392553-2c7bded21b23?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80);
   background-repeat: no-repeat;
   background-size: cover;
   -webkit-background-size: cover;

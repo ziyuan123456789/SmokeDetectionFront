@@ -1,61 +1,63 @@
-import axios from "axios";
+import axios from 'axios'
+import { ElMessage } from 'element-plus' 
 
-//创建一个axios的对象
-const instance =axios.create({
-    baseURL:'http://localhost:8088/demo',//会在发送请求的时候发送到url前面
-    timeout:5000,//链接超时   
+const baseURL = 'http://localhost:8089'
+const instance = axios.create({
+  baseURL: baseURL,
+  timeout: 5000
 })
-// 请求拦截
-// 所有的网络请求都会先走这个方法，我们可以在他里面为请求添加一些自定制的内容
+
 instance.interceptors.request.use(
-    function(config){
-        // console.group('全局请求拦截')
-        // console.log(config)
-        // console.groupEnd();
-        return config;      
-    },
-    function(err){
-        return Promise.reject(err);
+  (config) => {
+    console.log(config.includeToken)
+    if (config.includeToken === undefined) {
+        console.log("必须声明includeToken来指示是否应包含token")
+      throw new Error('必须声明includeToken来指示是否应包含token')
     }
-);
 
-// 响应拦截
-// 所有的网络请求返回数据后都都会执行此方法，可以根据服务器返回的状态码，做相应的数据
-instance.interceptors.request.use(
-    function(response){
-        // console.group('全局响应拦截')
-        // console.log(response)
-        // console.groupEnd();
-        return response;
-    },
-    function(err){
-        return Promise.reject(err);
+    if (config.includeToken) {
+      const token = localStorage.getItem('loginData')
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`
+      } else {
+        ElMessage.error('请求需要携带登录信息，但未找到token。')
+        return Promise.reject(new Error('需要登录'))
+      }
     }
-);
+    delete config.includeToken
+    return config
+  },
+  (error) => Promise.reject(error)
+)
 
-export function get(url,params){
-      return instance.get(url,{
-          params
-      });
+instance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 500) {
+      ElMessage.error('服务器致命错误')
+    } else if (error.response && error.response.status === 401) {
+      ElMessage.error('登录已经过期')
+      localStorage.removeItem('loginData')
+    }
+    return Promise.reject(error)
+  }
+)
+
+export function get(url, params, includeToken = false) {
+  return instance.get(url, { params, includeToken })
 }
 
-export function post(url,data){
-    return instance.post(url,
-        data,{
-            headers: {'Content-Type': 'application/json; charset=utf-8'},
-          }
-    );
+export function post(url, data, includeToken = false) {
+  return instance.post(url, data, {
+    includeToken,
+    headers: { 'Content-Type': 'application/json; charset=utf-8' }
+  })
 }
 
-export function del(url){
-    return instance.post(url);
+export function del(url, includeToken = false) {
+  return instance.delete(url, { includeToken })
 }
 
-export function put(url,data){
-    return instance.post(url,data);
+export function put(url, data, includeToken = false) {
+  return instance.put(url, data, { includeToken })
 }
-
-
-
-
-

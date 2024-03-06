@@ -1,61 +1,109 @@
 <template>
-  <div id="nav-wrap">
-
-    <div id="xl">
-      <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse" @open="handleOpen"
-        @close="handleClose" background-color="#545c64" text-color="#fff" active-text-color="#fff" router>
-        <template v-for="(item, index) in router.options.routes">
-          <el-sub-menu v-if="!item.hidden && item.meta" :key="item.id" :index="index + ''">
-            <!-- 一级菜单 -->
-            <template #title>
-              <el-icon>
-        <component :is="item.meta.icon" />
-      </el-icon>
-              <span v-if="item.meta">{{ item.meta.name }}</span>
-            </template>
-            <!-- 子级菜单 -->
-            <el-menu-item v-if="item.children && item.children.length > 0" v-for="subItem in item.children"
-              :key="subItem.id" :index="subItem.path">{{ subItem.meta && subItem.meta.name }}</el-menu-item>
+  <el-container>
+    <el-aside width="200px" class="aside-menu">
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="vertical" @select="handleSelect" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+        <template v-for="item in menuItems()" :key="item.path">
+          <el-menu-item v-if="item.children.length <= 1" :index="checkUrl(item.path, item.children[0].path)">
+            {{ item.cnName }}
+          </el-menu-item>
+          <el-sub-menu v-else :index="item.path">
+            <template #title>{{ item.cnName }}</template>
+            <el-menu-item v-for="child in item.children" :key="child.path" :index="child.path">
+              {{ child.cnName }}
+            </el-menu-item>
           </el-sub-menu>
         </template>
-
       </el-menu>
-    </div>
-  </div>
+    </el-aside>
+  </el-container>
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
 import { useRouter } from 'vue-router'
 export default {
-  name: 'navMenu',
-  setup() {
-    const router = useRouter() //获取所有路由
-    const isCollapse = ref(false)
-    const handleOpen = (key, keyPath) => {
-      console.log(key, keyPath)
-    }
-    const handleClose = (key, keyPath) => {
-      console.log(key, keyPath)
-    }
-    return {
-      isCollapse,
-      handleOpen,
-      handleClose,
-      router
-    }
+  data() {
+      return {
+          activeIndex: this.$route.path,
+          isAdmin: false,
+          loginData: {}
+      };
+  },
+  mounted() {
+      this.checkLogin();
+  },
+  watch: {
+      '$route'(newRoute) {
+          this.activeIndex = newRoute.path;
+      }
+  },
+  computed: {
+
+
+
+  },
+  methods: {
+      menuItems() {
+          let routes = this.$router.options.routes;
+          const userInfo = JSON.parse(localStorage.getItem('loginData'));
+          const userRole = userInfo ? userInfo.role : null;
+          const returnData = routes.filter(route => {
+              if (route.hidden) {
+                  return false;
+              }
+              if (route.needRole && userRole !== route.needRole) {
+                  return false;
+              }
+              return true;
+          });
+          return returnData
+      },
+      checkUrl(baseurl, childurl) {
+          if (childurl == '') {
+              return baseurl
+          } else {
+              return baseurl + '/' + childurl
+          }
+      },
+      gotoLogin() {
+          this.$store.commit('SET_RETURN_URL', this.$route.fullPath);
+          this.$router.push({ name: 'LoginPage' });
+      },
+      handleSelect(key, keyPath) {
+          if (keyPath.length > 1) {
+              this.$router.push(keyPath[0] + '/' + keyPath[1]);
+              return
+          }
+          console.log(keyPath)
+          this.$router.push(key);
+      },
+      checkLogin() {
+          this.loginData = JSON.parse(localStorage.getItem("loginData"));
+          if (this.loginData == null) {
+              return true;
+          } else {
+              this.isAdmin = this.loginData.role === "1";
+              return false;
+          }
+      },
+      logout() {
+          localStorage.removeItem('loginData')
+          this.isAdmin = false
+          this.menuItems()
+          this.$router.push('/');
+      }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-#nav-wrap {
-  position: fixed;
-  margin-top: 15px;
-  top: 35px;
-  left: 0;
-  height: 100vh;
-  width: 200px;
-  background-color: #545c64;
+<style scoped>
+.aside-menu {
+  height: 100vh; /* 设置侧边栏菜单高度为视口高度 */
+  overflow-y: auto; /* 内容超出时显示滚动条 */
+  /* 根据需要调整背景色、边框等样式 */
+}
+
+.el-menu-demo {
+  height: 100%; /* 使菜单填满整个侧边栏 */
+  border-right: none; /* 可选：如果不需要右边框，可以去掉 */
 }
 </style>
