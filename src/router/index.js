@@ -63,7 +63,7 @@ const routes = [
         meta: {
           name: '硬件管理'
         },
-        component: () => import('../views/Pages/Territory/HardwareSetting.vue')
+        component: () => import('../views/Pages/Territory/HardwareContro.vue')
       },
       {
         path: 'ActionContro',

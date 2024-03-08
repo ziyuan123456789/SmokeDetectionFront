@@ -20,7 +20,7 @@ instance.interceptors.request.use(
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`
       } else {
-        ElMessage.error('请求需要携带登录信息，但未找到token。')
+        ElMessage.error('请求需要携带登录信息,但未找到token。')
         return Promise.reject(new Error('需要登录'))
       }
     }
@@ -38,6 +38,7 @@ instance.interceptors.response.use(
     } else if (error.response && error.response.status === 401) {
       ElMessage.error('登录已经过期')
       localStorage.removeItem('loginData')
+      
     }
     return Promise.reject(error)
   }

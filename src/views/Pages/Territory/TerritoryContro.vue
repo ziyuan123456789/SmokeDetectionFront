@@ -51,14 +51,41 @@
     </el-card>
 
 
-    <el-dialog v-model="dialogVisibledownload" title="新建辖区" width="55%">
-        <div style="text-align:center">
-            <el-progress type="circle" :percentage="progressBar" status="success" />
-        </div>
+    <el-dialog v-model="dialogVisibleAddTerritory" title="新建辖区" width="45%">
+        <el-form :model="AddTerritoryForm">
+            <el-form-item label="名称">
+                <el-input v-model="AddTerritoryForm.territoryName"></el-input>
+            </el-form-item>
+            <el-form-item label="硬件配置">
+                <el-select v-model="AddTerritoryForm.hardwareSettingId" placeholder="请选择硬件配置">
+                    <el-option v-for="item in hardwareOptions" :key="item.value" :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="预警行为">
+                <el-select v-model="AddTerritoryForm.territoryConfigurationId" placeholder="请选择预警行为">
+                    <el-option v-for="action in alertActions" :key="action.value" :label="action.label"
+                        :value="action.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="本地存储大小">
+                <el-input-number v-model="AddTerritoryForm.storageSize" :step="10" />
+            </el-form-item>
+        </el-form>
 
         <template #footer>
             <span class="dialog-footer">
-                <el-button type="primary" @click="dialogVisibledownload = false">
+                <el-button type="info" @click="dialogVisibleAddTerritory = false; AddTerritoryForm = {
+                name: '',
+                hardware: '',
+                alertAction: '',
+                storageSize: ''
+            }">
+                    取消
+                </el-button>
+                <el-button type="primary" @click="submitAddTerritory(); dialogVisibleAddTerritory = false">
                     确认
                 </el-button>
             </span>
@@ -73,10 +100,22 @@ import { get, post, del, put } from '@/utils/request';
 export default {
     data() {
         return {
+            AddTerritoryForm: {
+                territoryName: '',
+                hardwareSettingId: '',
+                territoryConfigurationId: '',
+                storageSize: ''
+            },
+            dialogVisibleAddTerritory: false,
             currentPage: 1,
             pageSize: 10,
-            allTerritory: []
+            allTerritory: [],
+            hardwareOptions: [
+            ],
+            alertActions: [
+            ],
         };
+
     },
     mounted() {
         this.getAllTerritory()
@@ -89,14 +128,78 @@ export default {
         },
     },
     methods: {
-        deletetTerritory(id) {
-            get('/territory/deleteTerritory', { id: id.territoryId }, true).then(res => {
+        submitAddTerritory() {
+            get('/territory/createTerritory', this.AddTerritoryForm, true).then(res => {
+                if (res.data.success === true) {
+                    let hardwareOption = this.hardwareOptions.find(option => option.value == res.data.data.hardwareSettingId);
+                    let action = this.alertActions.find(option => option.value == res.data.data.territoryConfigurationId);
+                    console.log(action.label)
+                    this.allTerritory.push({
+                        territoryId: res.data.data.territoryId,
+                        territoryName: res.data.data.territoryName,
+                        hardwareName: hardwareOption.label,
+                        action: action.label,
+                        storageSize: res.data.data.storageSize
+                    })
+                    ElMessage({
+                        message: '提交成功',
+                        type: 'success',
+                    });
+                } else {
+                    ElMessage({
+                        message: '服务器内部错误',
+                        type: 'error',
+                    });
+                }
+            })
+            this.dialogVisibleAddTerritory = {
+                name: '',
+                hardware: '',
+                alertAction: '',
+                storageSize: ''
+            }
+        },
+        addTerritory() {
+            this.hardwareOptions = []
+            this.alertActions = []
+            get('/HardwareSetting/getAll', {}, true).then(res => {
+                if (res.data.success === true) {
+                    for (var i = 0; i < res.data.data.length; i++) {
+                        this.hardwareOptions.push({ value: res.data.data[i].hardwareSettingId, label: res.data.data[i].hardwareName })
+                    }
+                } else {
+                    ElMessage({
+                        message: '服务器内部错误',
+                        type: 'error',
+                    });
+                }
+            })
+            get('/TerritoryConfiguration/getAll', {}, true).then(res => {
+                if (res.data.success === true) {
+                    for (var i = 0; i < res.data.data.length; i++) {
+                        this.alertActions.push({ value: res.data.data[i].territoryConfigurationId, label: res.data.data[i].action })
+                    }
+                } else {
+                    ElMessage({
+                        message: '服务器内部错误',
+                        type: 'error',
+                    });
+                }
+            })
+            this.dialogVisibleAddTerritory = true
+        },
+        deletetTerritory(row) {
+            const territoryId = row.territoryId; 
+            get('/territory/deleteTerritory', { id: territoryId }, true).then(res => {
                 if (res.data.success === true) {
                     ElMessage({
                         message: '删除成功',
                         type: 'success',
                     });
-                    this.allTerritory.splice(id.index, 1)
+                    const index = this.allTerritory.findIndex(t => t.territoryId === territoryId);
+                    if (index !== -1) {
+                        this.allTerritory.splice(index, 1);
+                    }
                 } else {
                     ElMessage({
                         message: '删除失败',
@@ -104,13 +207,14 @@ export default {
                     });
                 }
             }).catch(error => {
-                console.log(error)
                 ElMessage({
-                    message: '请求异常,服务器内部错误',
+                    message: '请求失败: ' + error.message,
                     type: 'error',
                 });
             });
         },
+
+
         getAllTerritory() {
             get('/territory/getAllTerritory', {}, true).then(res => {
                 if (res.data.success === true) {
