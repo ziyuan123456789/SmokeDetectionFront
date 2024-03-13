@@ -1,7 +1,8 @@
 <template>
   <el-container>
     <el-aside width="200px" class="aside-menu">
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="vertical" @select="handleSelect" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="vertical" @select="handleSelect"
+        background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
         <template v-for="item in menuItems()" :key="item.path">
           <el-menu-item v-if="item.children.length <= 1" :index="checkUrl(item.path, item.children[0].path)">
             {{ item.cnName }}
@@ -22,19 +23,19 @@
 import { useRouter } from 'vue-router'
 export default {
   data() {
-      return {
-          activeIndex: this.$route.path,
-          isAdmin: false,
-          loginData: {}
-      };
+    return {
+      activeIndex: this.$route.path,
+      isAdmin: false,
+      loginData: {}
+    };
   },
   mounted() {
-      this.checkLogin();
+    this.checkLogin();
   },
   watch: {
-      '$route'(newRoute) {
-          this.activeIndex = newRoute.path;
-      }
+    '$route'(newRoute) {
+      this.activeIndex = newRoute.path;
+    }
   },
   computed: {
 
@@ -42,68 +43,69 @@ export default {
 
   },
   methods: {
-      menuItems() {
-          let routes = this.$router.options.routes;
-          const userInfo = JSON.parse(localStorage.getItem('loginData'));
-          const userRole = userInfo ? userInfo.role : null;
-          const returnData = routes.filter(route => {
-              if (route.hidden) {
-                  return false;
-              }
-              if (route.needRole && userRole !== route.needRole) {
-                  return false;
-              }
-              return true;
-          });
-          return returnData
-      },
-      checkUrl(baseurl, childurl) {
-          if (childurl == '') {
-              return baseurl
-          } else {
-              return baseurl + '/' + childurl
-          }
-      },
-      gotoLogin() {
-          this.$store.commit('SET_RETURN_URL', this.$route.fullPath);
-          this.$router.push({ name: 'LoginPage' });
-      },
-      handleSelect(key, keyPath) {
-          if (keyPath.length > 1) {
-              this.$router.push(keyPath[0] + '/' + keyPath[1]);
-              return
-          }
-          console.log(keyPath)
-          this.$router.push(key);
-      },
-      checkLogin() {
-          this.loginData = JSON.parse(localStorage.getItem("loginData"));
-          if (this.loginData == null) {
-              return true;
-          } else {
-              this.isAdmin = this.loginData.role === "1";
-              return false;
-          }
-      },
-      logout() {
-          localStorage.removeItem('loginData')
-          this.isAdmin = false
-          this.menuItems()
-          this.$router.push('/');
+    menuItems() {
+      let routes = this.$router.options.routes;
+      const userInfo = JSON.parse(localStorage.getItem('loginData'));
+      const userRole = userInfo ? userInfo.role : null;
+      const returnData = routes.filter(route => {
+        if (route.hidden) {
+          return false;
+        }
+        if (!route.meta || !route.meta.needRole || route.meta.needRole === userRole) {
+          return true;
+        }
+        return false;
+      });
+
+      return returnData;
+    },
+
+    checkUrl(baseurl, childurl) {
+      if (childurl == '') {
+        return baseurl
+      } else {
+        return baseurl + '/' + childurl
       }
+    },
+    gotoLogin() {
+      this.$store.commit('SET_RETURN_URL', this.$route.fullPath);
+      this.$router.push({ name: 'LoginPage' });
+    },
+    handleSelect(key, keyPath) {
+      if (keyPath.length > 1) {
+        this.$router.push(keyPath[0] + '/' + keyPath[1]);
+        return
+      }
+      console.log(keyPath)
+      this.$router.push(key);
+    },
+    checkLogin() {
+      this.loginData = JSON.parse(localStorage.getItem("loginData"));
+      if (this.loginData == null) {
+        return true;
+      } else {
+        this.isAdmin = this.loginData.role === "1";
+        return false;
+      }
+    },
+    logout() {
+      localStorage.removeItem('loginData')
+      this.isAdmin = false
+      this.menuItems()
+      this.$router.push('/');
+    }
   }
 }
 </script>
 
 <style scoped>
 .aside-menu {
-  height: 100vh; /* 设置侧边栏菜单高度为视口高度 */
-  overflow-y: auto; /* 内容超出时显示滚动条 */
-  /* 根据需要调整背景色、边框等样式 */
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .el-menu-demo {
-  height: 100%; /* 使菜单填满整个侧边栏 */
-  border-right: none; /* 可选：如果不需要右边框，可以去掉 */
+  height: 100%;
+  border-right: none;
 }
 </style>

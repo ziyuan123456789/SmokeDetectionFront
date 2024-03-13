@@ -1,19 +1,10 @@
 <template>
-  <div style="width:100%;height:50px;background-color: #F4A460">
-    <div class="time">
-      <div style="margin-left: 20px;font-size: 25px;line-height: 20px;color: #909399;">在线监控系统</div>
-    </div>
-    <div class="time1">
+  <div class="header">
+    <div class="title">在线监控系统</div>
+    <div class="tools">
       <timein />
-    </div>
-    <div div="zh">
-
-      <div class="asv1">
-        <screen />
-      </div>
-      <div class="asv">
-        <avatar></avatar>
-      </div>
+      <screen />
+      <avatar />
     </div>
   </div>
 </template>
@@ -32,31 +23,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.asv1 {
-  position: absolute;
-  margin-top: 6px;
-  margin-left: 85%;
-  cursor: pointer
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  background-color: #F4A460;
+  padding: 0 20px;
 }
 
-.time {
-
-  position: absolute;
-  margin-top: 15px;
-
-  cursor: pointer
+.title {
+  font-size: 25px;
+  color: #909399;
+  line-height: 50px; 
 }
 
-.asv {
-  position: absolute;
-  margin-left: 94%;
-  margin-top: 5px;
-}
-
-.time1 {
-  position: absolute;
-  height: 5%;
-  margin-left: 70%;
-  margin-top: 6px;
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  margin-right: 50px;
 }
 </style>

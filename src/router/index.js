@@ -45,12 +45,14 @@ const routes = [
     name: 'Territory',
     cnName: '辖区管理',
     component: Layout,
-    needRole:"1",
+    meta: {
+      needRole: '1'
+    },
     children: [
       {
         path: 'TerritoryContro',
         name: 'TerritoryContro',
-        cnName:'辖区管理',
+        cnName: '辖区管理',
         meta: {
           name: '辖区管理'
         },
@@ -59,7 +61,7 @@ const routes = [
       {
         path: 'HardwareContro',
         name: 'HardwareContro',
-        cnName:'硬件管理',
+        cnName: '硬件管理',
         meta: {
           name: '硬件管理'
         },
@@ -68,13 +70,12 @@ const routes = [
       {
         path: 'ActionContro',
         name: 'ActionContro',
-        cnName:'行为管理',
+        cnName: '行为管理',
         meta: {
           name: '行为管理'
         },
         component: () => import('../views/Pages/Territory/ActionContro.vue')
-      },
-
+      }
     ]
   },
   {
@@ -82,7 +83,9 @@ const routes = [
     name: 'Statistics',
     cnName: '统计信息',
     component: Layout,
-    needRole:'1',
+    meta: {
+      needRole: '1'
+    },
     children: [
       {
         path: '',
@@ -100,7 +103,9 @@ const routes = [
     name: 'AlarmManagement',
     cnName: '警报管理',
     component: Layout,
-    needRole:'1',
+    meta: {
+      needRole: '1'
+    },
     children: [
       {
         path: 'ActionConfiguration',
@@ -119,19 +124,22 @@ const routes = [
           name: '预警后行为配置'
         },
         component: () => import('../views/main.vue')
-      },
+      }
     ]
   },
   {
     path: '/ScreenshotManagement',
     name: 'ScreenshotManagement',
     cnName: '截图管理',
+    meta: {
+      needRole: '1'
+    },
     component: Layout,
     children: [
       {
         path: 'PushScreenshots',
         name: 'PushScreenshots',
-        cnName:'截图推送',
+        cnName: '截图推送',
         meta: {
           name: '推送截图'
         },
@@ -140,27 +148,9 @@ const routes = [
       {
         path: 'FilterScreenshots',
         name: 'FilterScreenshots',
-        cnName:'截图过滤',
+        cnName: '截图过滤',
         meta: {
           name: '截图过滤'
-        },
-        component: () => import('../views/main.vue')
-      }
-    ]
-  },
-  {
-    path: '/doexperiment',
-    name: 'doexperiment',
-    cnName: '做实验',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '',
-        name: 'doexperiment',
-        cnName: '做实验',
-        meta: {
-          name: '做实验'
         },
         component: () => import('../views/main.vue')
       }
@@ -170,7 +160,9 @@ const routes = [
     path: '/UserManagement',
     name: 'UserManagement',
     cnName: '用户管理',
-    needRole: '1',
+    meta: {
+      needRole: '1'
+    },
     component: Layout,
     children: [
       {
@@ -198,7 +190,88 @@ const routes = [
     name: 'LoginPage',
     cnName: '登陆页面',
     hidden: true,
+    meta: {
+      name: '用户登录'
+    },
     component: () => import('../views/Pages/LoginPage.vue')
+  },
+  {
+    path: '/UserScreenshot',
+    name: 'UserScreenshot',
+    cnName: '查看截图',
+    meta: {
+      needRole: '0'
+    },
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'MyTerritory',
+        cnName: '我的辖区',
+        meta: {
+          name: '我的辖区'
+        },
+        component: () => import('../views/main.vue')
+      }
+    ]
+  },
+  {
+    path: '/MyTerritory',
+    name: 'MyTerritory',
+    cnName: '辖区配置',
+    meta: {
+      needRole: '0'
+    },
+    component: Layout,
+    children: [
+      {
+        path: 'applyTerritory',
+        name: 'applyTerritory',
+        cnName: '申请辖区',
+        meta: {
+          name: '我的辖区'
+        },
+        component: () => import('../views/Pages/Territory/ApplyTerritory.vue')
+      },
+      {
+        path: 'applyTerritory',
+        name: 'applyTerritory',
+        cnName: '申请状态',
+        meta: {
+          name: '申请状态'
+        },
+        component: () => import('../views/Pages/Territory/ApplyTerritory.vue')
+      },
+      {
+        path: 'applyTerritory',
+        name: 'applyTerritory',
+        cnName: '申请辖区',
+        meta: {
+          name: '我的辖区'
+        },
+        component: () => import('../views/Pages/Territory/ApplyTerritory.vue')
+      }
+    ]
+  },
+  {
+    path: '/UserInfo',
+    name: 'UserInfo',
+    cnName: '个人中心',
+    meta: {
+      needRole: '0'
+    },
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'UserInfo',
+        cnName: '个人中心',
+        meta: {
+          name: '个人中心'
+        },
+        component: () => import('../views/Pages/UserInfo/UserInfo.vue')
+      }
+    ]
   }
 ]
 
@@ -210,17 +283,40 @@ const router = createRouter({
 const notNeedLogin = ['LoginPage']
 
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = !!localStorage.getItem('loginData')
+  const loginData = localStorage.getItem('loginData')
+  const isLoggedIn = !!loginData
+  const userData = loginData ? JSON.parse(loginData) : {}
+  const userRole = userData.role
+
   if (to.name === 'NotFound') {
     next()
     return
   }
-  if (!notNeedLogin.includes(to.name) && !isLoggedIn) {
+  if (notNeedLogin.includes(to.name)) {
+    next()
+    return
+  }
+  if (!isLoggedIn) {
     ElMessage({
       message: '请先登录',
       type: 'warning'
     })
     next({ name: 'LoginPage' })
+    return
+  }
+  if (to.matched.some((record) => record.meta.needRole)) {
+    console.log('==')
+    const routeRole = to.matched.find((record) => record.meta.needRole).meta
+      .needRole
+    if (userRole === routeRole) {
+      next()
+    } else {
+      ElMessage({
+        message: '没有权限访问',
+        type: 'error'
+      })
+      next(false)
+    }
   } else {
     next()
   }

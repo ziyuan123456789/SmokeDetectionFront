@@ -18,22 +18,25 @@
             <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:79vh">
                 <el-table-column type="index" label="序号" width="55" align="center">
                 </el-table-column>
-                <el-table-column prop="territoryId" label="内部编号" align="center" min-width="50">
+                <el-table-column prop="territoryId" label="内部编号" align="center" >
                 </el-table-column>
-                <el-table-column prop="territoryName" label="辖区名称" align="center" min-width="100">
+                <el-table-column prop="territoryName" label="辖区名称" align="center">
                 </el-table-column>
-                <el-table-column prop="hardwareName" label="硬件配置" align="center" min-width="50">
+                <el-table-column prop="hardwareName" label="硬件配置" align="center">
                 </el-table-column>
-                <el-table-column prop="storageSize" label="存储大小" align="center" min-width="50">
+                <el-table-column prop="storageSize" label="存储大小" align="center" >
                 </el-table-column>
                 <el-table-column prop="action" label="预警后事件" align="center">
+                </el-table-column>
+                <el-table-column prop="confidenceLevel" label="报警阈值" align="center" >
                 </el-table-column>
                 <el-table-column align="center" label="操作" min-width="240">
                     <template #default="scope">
                         <div class="button-group" style="text-align:center">
                             <el-button type="success" @click="rating(scope.row)">查看拥有者</el-button>
-                            <el-button type="primary" @click="rating(scope.row)">修改配置</el-button>
-                            <el-button type="warning" @click="rating(scope.row)">修改行为</el-button>
+                            <el-button type="warning" @click="hardwareOptions = [
+            ]; alertActions = [
+            ], selectInit(); changeTerritory = scope.row; dialogVisibleChangeTerritory = true">编辑辖区</el-button>
                             <el-popconfirm title="确认要删除吗?" @confirm="deletetTerritory(scope.row)">
                                 <template #reference>
                                     <el-button type="danger"> 删除</el-button>
@@ -71,8 +74,12 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="本地存储大小">
-                <el-input-number v-model="AddTerritoryForm.storageSize" :step="10" />
+                <el-input-number v-model="AddTerritoryForm.storageSize" :step="10" :min="0" :max="100000" />
             </el-form-item>
+            <el-form-item label="报警阈值">
+                <el-input-number v-model="AddTerritoryForm.confidenceLevel" :min="0.1" :precision="2" :step="0.05" :max="0.95" />
+            </el-form-item>
+
         </el-form>
 
         <template #footer>
@@ -91,6 +98,47 @@
             </span>
         </template>
     </el-dialog>
+
+    <el-dialog v-model="dialogVisibleChangeTerritory" title="新建辖区" width="45%">
+        <el-form :model="changeTerritory">
+            <el-form-item label="名称">
+                <el-input v-model="changeTerritory.territoryName"></el-input>
+            </el-form-item>
+            <el-form-item label="硬件配置">
+                <el-select v-model="changeTerritory.hardwareSettingId" placeholder="请选择硬件配置">
+                    <el-option v-for="item in hardwareOptions" :key="item.value" :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="预警行为">
+                <el-select v-model="changeTerritory.territoryConfigurationId" placeholder="请选择预警行为">
+                    <el-option v-for="action in alertActions" :key="action.value" :label="action.label"
+                        :value="action.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="本地存储大小">
+                <el-input-number v-model="changeTerritory.storageSize" :step="10" />
+            </el-form-item>
+            <el-form-item label="报警阈值">
+                <el-input-number v-model="changeTerritory.confidenceLevel" :min="0.1" :precision="2" :step="0.05" :max="0.95" />
+            </el-form-item>
+        </el-form>
+
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button type="info" @click="dialogVisibleChangeTerritory = false;">
+                    取消
+                </el-button>
+                <el-button type="primary" @click="submitChangeTerritory(); dialogVisibleChangeTerritory = false">
+                    确认
+                </el-button>
+            </span>
+        </template>
+    </el-dialog>
+
+
 </template>
 
 <script>
@@ -100,6 +148,8 @@ import { get, post, del, put } from '@/utils/request';
 export default {
     data() {
         return {
+            changeTerritory: {},
+            dialogVisibleChangeTerritory: false,
             AddTerritoryForm: {
                 territoryName: '',
                 hardwareSettingId: '',
@@ -128,6 +178,26 @@ export default {
         },
     },
     methods: {
+        submitChangeTerritory() {
+            get('/territory/updateTerritory', this.changeTerritory, true).then(res => {
+                if (res.data.success === true) {
+                    let id = this.allTerritory.find(option => option.territoryId == this.changeTerritory.territoryId);
+                    let hardwareOption = this.hardwareOptions.find(option => option.value == res.data.data.hardwareSettingId);
+                    let action = this.alertActions.find(option => option.value == res.data.data.territoryConfigurationId);
+                    id.hardwareName = hardwareOption.label
+                    id.action = action.label
+                    ElMessage({
+                        message: '更改成功',
+                        type: 'success',
+                    });
+                } else {
+                    ElMessage({
+                        message: '服务器内部错误',
+                        type: 'error',
+                    });
+                }
+            })
+        },
         submitAddTerritory() {
             get('/territory/createTerritory', this.AddTerritoryForm, true).then(res => {
                 if (res.data.success === true) {
@@ -139,7 +209,8 @@ export default {
                         territoryName: res.data.data.territoryName,
                         hardwareName: hardwareOption.label,
                         action: action.label,
-                        storageSize: res.data.data.storageSize
+                        storageSize: res.data.data.storageSize,
+                        confidenceLevel:res.data.data.confidenceLevel
                     })
                     ElMessage({
                         message: '提交成功',
@@ -159,9 +230,7 @@ export default {
                 storageSize: ''
             }
         },
-        addTerritory() {
-            this.hardwareOptions = []
-            this.alertActions = []
+        selectInit() {
             get('/HardwareSetting/getAll', {}, true).then(res => {
                 if (res.data.success === true) {
                     for (var i = 0; i < res.data.data.length; i++) {
@@ -186,10 +255,15 @@ export default {
                     });
                 }
             })
+        },
+        addTerritory() {
+            this.hardwareOptions = []
+            this.alertActions = []
+            this.selectInit()
             this.dialogVisibleAddTerritory = true
         },
         deletetTerritory(row) {
-            const territoryId = row.territoryId; 
+            const territoryId = row.territoryId;
             get('/territory/deleteTerritory', { id: territoryId }, true).then(res => {
                 if (res.data.success === true) {
                     ElMessage({

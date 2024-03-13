@@ -18,11 +18,15 @@ import { ElMessage } from 'element-plus'
 const circleUrl = ref(
   'https://img.zcool.cn/community/01b01b58f906c1a8012049efa20067.jpg@1280w_1l_2o_100sh.jpg'
 )
-const logout =()=>{
-    router.replace('/'), ElMessage({
-              message: '已退出！',
-              type: 'success'
-            })
+const logout = () => {
+  ElMessage({
+    message: '账号登出',
+    type: 'success'
+  })
+  localStorage.removeItem('loginData')
+  router.push('/login').catch(err => {
+    console.error(err)
+  })
 }
 </script>
 
