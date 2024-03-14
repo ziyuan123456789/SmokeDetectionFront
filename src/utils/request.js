@@ -10,6 +10,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     console.log(config.includeToken)
+    //还是决定增加一个bool变量,显式声明是否需要携带Token
     if (config.includeToken === undefined) {
       console.log('必须声明includeToken来指示是否应包含token')
       throw new Error('必须声明includeToken来指示是否应包含token')
@@ -21,7 +22,7 @@ instance.interceptors.request.use(
         tokenData = JSON.parse(tokenData) 
         config.headers['Authorization'] = `Bearer ${tokenData.token}`
       } else {
-        ElMessage.error('请求需要携带登录信息，但未找到token。')
+        ElMessage.error('请求需要携带登录信息,但未找到token。')
         return Promise.reject(new Error('需要登录'))
       }
     }

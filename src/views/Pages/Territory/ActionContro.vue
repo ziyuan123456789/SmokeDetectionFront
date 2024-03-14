@@ -170,7 +170,7 @@ export default {
         }
     },
     mounted() {
-        get('/TerritoryConfiguration/getAll', {}, false).then(res => {
+        get('/TerritoryConfiguration/getAll', {}, true).then(res => {
             this.hardwareInfo = res.data.data
 
         }).catch(error => {

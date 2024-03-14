@@ -166,13 +166,13 @@ const routes = [
     component: Layout,
     children: [
       {
-        path: 'TerritoryAllocation',
-        name: 'TerritoryAllocation',
+        path: 'AdminActionAllocation',
+        name: 'AdminActionAllocation',
         cnName: '辖区分配',
         meta: {
           name: '辖区分配'
         },
-        component: () => import('../views/main.vue')
+        component: () => import('../views/Pages/Territory/AdminActionAllocation.vue')
       },
       {
         path: 'CourseMaintenance',
@@ -234,18 +234,19 @@ const routes = [
         component: () => import('../views/Pages/Territory/ApplyTerritory.vue')
       },
       {
-        path: 'applyTerritory',
-        name: 'applyTerritory',
+        path: 'applyTerritoryState',
+        name: 'applyTerritoryState',
         cnName: '申请状态',
         meta: {
           name: '申请状态'
         },
-        component: () => import('../views/Pages/Territory/ApplyTerritory.vue')
+        component: () =>
+          import('../views/Pages/Territory/applyTerritoryState.vue')
       },
       {
-        path: 'applyTerritory',
-        name: 'applyTerritory',
-        cnName: '申请辖区',
+        path: 'mineTerritory',
+        name: 'mineTerritory',
+        cnName: '我的辖区',
         meta: {
           name: '我的辖区'
         },

@@ -172,7 +172,7 @@ export default {
         }
     },
     mounted() {
-        get('/HardwareSetting/getAll', {}, false).then(res => {
+        get('/HardwareSetting/getAll', {}, true).then(res => {
             this.hardwareInfo = res.data.data
 
         }).catch(error => {
