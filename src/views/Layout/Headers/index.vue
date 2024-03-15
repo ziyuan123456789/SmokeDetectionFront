@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="title">在线监控系统</div>
+    <div class="title">在线吸烟监控系统</div>
     <div class="tools">
       <timein />
       <screen />
@@ -34,9 +34,10 @@ export default {
 }
 
 .title {
-  font-size: 25px;
-  color: #909399;
-  line-height: 50px; 
+  font-size: 28px;
+  color: #FFFFFF;
+  line-height: 60px;
+  font-weight: bold;
 }
 
 .tools {

@@ -11,31 +11,32 @@
                             :value="item.id" />
                     </el-select>
                 </el-col>
-                <el-col :span="4">
-                    <el-button style="height:40px" type="success" @click="applyForAll"
-                        v-if="selectedRows.length > 0">申请全部</el-button>
-                </el-col>
             </el-row>
-            <el-alert v-if="allowAddTerritoryNums === -1" type="error" title="当前您的辖区已达限制" :closable="false">
-            </el-alert>
-            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:79vh"
-                @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55" :selectable="selectable" />
 
+            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:79vh"
+                @selection-change="handleSelectionChange" empty-text="暂无新申请">
                 <el-table-column type="index" label="序号" width="55" align="center">
                 </el-table-column>
-                <el-table-column prop="territoryId" label="内部编号" align="center">
+                <el-table-column prop="changeRequestId" label="内部编号" align="center">
                 </el-table-column>
                 <el-table-column prop="territoryName" label="辖区名称" align="center">
                 </el-table-column>
-                <el-table-column prop="hardwareName" label="硬件配置" align="center">
+              <el-table-column prop="action" label="预警后行为" align="center">
+              </el-table-column>
+                <el-table-column prop="username" label="申请人" align="center">
                 </el-table-column>
-                <el-table-column prop="storageSize" label="存储大小" align="center">
+                <el-table-column prop="requestStatus" label="审批状态" align="center">
                 </el-table-column>
-                <el-table-column align="center" label="操作">
+                <el-table-column prop="requestDate" label="申请日期" align="center">
+                </el-table-column>
+                <el-table-column align="center" label="操作" width="240">
                     <template #default="scope">
-                        <el-button type="warning" @click="askForTerritory(scope.row)"
-                            :disabled="isLimitReached && !selectedRows.includes(scope.row)">申请辖区</el-button>
+                      <el-button type="success" @click="submitReviewResult(true, scope.row)"
+                                 :disabled="detectAvailability(scope.row)">同意申请
+                      </el-button>
+                      <el-button type="danger" @click="submitReviewResult(false, scope.row)"
+                                 :disabled="detectAvailability(scope.row)">拒绝申请
+                      </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -52,12 +53,12 @@
 
 <script>
 import { ElMessage } from 'element-plus'
-import { get, post, del, put } from '@/utils/request';
+import { get } from '@/utils/request'
 
 export default {
     data() {
         return {
-            allowAddTerritoryNums: '',
+
             selectedRows: [],
             dialogVisibleAddTerritory: false,
             currentPage: 1,
@@ -79,58 +80,43 @@ export default {
             const end = start + this.pageSize;
             return this.allTerritory.slice(start, end);
         },
-        isLimitReached() {
-            return this.allowAddTerritoryNums !== -1 && this.selectedRows.length >= this.allowAddTerritoryNums;
-        }
+
+
     },
     methods: {
-        handleSelectionChange(val) {
-            if (this.allowAddTerritoryNums === -1) {
-                return
-            }
-            this.selectedRows = val;
-            if (this.selectedRows.length >= this.allowAddTerritoryNums) {
-                ElMessage.error('已达最大选中数量')
-            }
-        },
-        selectable(row, index) {
-
-            if (this.allowAddTerritoryNums === -1) {
-                return false
-            }
-            if (this.selectedRows.length >= this.allowAddTerritoryNums && !this.selectedRows.includes(row)) {
-                return false;
-            }
-            return true;
-        },
-        askForTerritory(row) {
-            let tokenData = localStorage.getItem('loginData')
-            tokenData = JSON.parse(tokenData)
-            get('/territory/requestChanges', { userId: tokenData.id, territoryIds: row.territoryId }, true).then(res => {
+      detectAvailability(data) {
+        return data.requestStatus === '审批中'
+      },
+        submitReviewResult(isOk, data) {
+            
+            get('/territory/updateTerritoryChange', {approvalOutcome:isOk,changeRequestId:data.changeRequestId,requestedTerritoryId:data.requestedTerritoryId,remarks:data.remarks,userId:data.userId}, true).then(res => {
                 if (res.data.success === true) {
-                    ElMessage({
-                        message: '申请成功',
-                        type: 'success',
-                    });
-
-                    location.reload();
+                    console.log(res.data.data)
                 } else {
                     ElMessage({
-                        message: res.data.message,
+                        message: '请求失败',
                         type: 'error',
                     });
                 }
             })
         },
-        applyForAll() {
-            // 申请全部的逻辑
-        },
+
         getAllTerritory() {
-            get('/territory/availableTerritories', {}, true).then(res => {
+            get('/territory/findAllTerritoriesApply', {}, true).then(res => {
                 if (res.data.success === true) {
-                    console.log(res.data)
-                    this.allowAddTerritoryNums = res.data.data.currentCount
-                    this.allTerritory = res.data.data.availableTerritories
+                    this.allTerritory = res.data.data
+                  for (const element of this.allTerritory) {
+                    if (element.requestStatus === 'refuse') {
+                      element.requestStatus = '驳回'
+                    } else if (element.requestStatus === 'pending') {
+                      element.requestStatus = '尚未处理'
+                    } else if (element.requestStatus === 'agree') {
+                      element.requestStatus = '批准'
+                    } else {
+                      element.requestStatus = '未知状态'
+                        }
+                    }
+                    console.log( this.allTerritory)
                 } else {
                     ElMessage({
                         message: '请求失败',

@@ -21,7 +21,7 @@ const routes = [
     meta: {
       name: '用户注册'
     },
-    component: () => import('../views/Pages/RegPage.vue')
+    component: () => import('../views/Pages/CommonPages/RegPage.vue')
   },
   {
     path: '/',
@@ -56,7 +56,7 @@ const routes = [
         meta: {
           name: '辖区管理'
         },
-        component: () => import('../views/Pages/Territory/TerritoryContro.vue')
+        component: () => import('../views/Pages/AdminPages/TerritoryContro.vue')
       },
       {
         path: 'HardwareContro',
@@ -65,7 +65,7 @@ const routes = [
         meta: {
           name: '硬件管理'
         },
-        component: () => import('../views/Pages/Territory/HardwareContro.vue')
+        component: () => import('../views/Pages/AdminPages/HardwareContro.vue')
       },
       {
         path: 'ActionContro',
@@ -74,7 +74,7 @@ const routes = [
         meta: {
           name: '行为管理'
         },
-        component: () => import('../views/Pages/Territory/ActionContro.vue')
+        component: () => import('../views/Pages/AdminPages/ActionContro.vue')
       }
     ]
   },
@@ -172,7 +172,7 @@ const routes = [
         meta: {
           name: '辖区分配'
         },
-        component: () => import('../views/Pages/Territory/AdminActionAllocation.vue')
+        component: () => import('../views/Pages/AdminPages/AdminActionAllocation.vue')
       },
       {
         path: 'CourseMaintenance',
@@ -193,7 +193,7 @@ const routes = [
     meta: {
       name: '用户登录'
     },
-    component: () => import('../views/Pages/LoginPage.vue')
+    component: () => import('../views/Pages/CommonPages/LoginPage.vue')
   },
   {
     path: '/UserScreenshot',
@@ -211,7 +211,7 @@ const routes = [
         meta: {
           name: '我的辖区'
         },
-        component: () => import('../views/main.vue')
+        component: () => import('../views/Pages/UserPages/MyTerritory.vue')
       }
     ]
   },
@@ -231,7 +231,7 @@ const routes = [
         meta: {
           name: '我的辖区'
         },
-        component: () => import('../views/Pages/Territory/ApplyTerritory.vue')
+        component: () => import('../views/Pages/UserPages/ApplyTerritory.vue')
       },
       {
         path: 'applyTerritoryState',
@@ -241,7 +241,7 @@ const routes = [
           name: '申请状态'
         },
         component: () =>
-          import('../views/Pages/Territory/applyTerritoryState.vue')
+          import('../views/Pages/UserPages/applyTerritoryState.vue')
       },
       {
         path: 'mineTerritory',
@@ -250,7 +250,7 @@ const routes = [
         meta: {
           name: '我的辖区'
         },
-        component: () => import('../views/Pages/Territory/ApplyTerritory.vue')
+        component: () => import('../views/Pages/UserPages/MyTerritory.vue')
       }
     ]
   },

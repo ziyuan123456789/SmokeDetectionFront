@@ -1,6 +1,6 @@
 <template>
     <el-card class="containner">
-        <div style="margin-top:10px">
+      <div style="display: flex; flex-direction: column; height: calc(100vh - 7vh);margin-top:10px">
             <el-row :gutter="20">
                 <el-col :span="4">
                     <el-input style="height:40px" v-model="input" placeholder="请输入指定用户"></el-input>
@@ -13,7 +13,7 @@
                 </el-col>
             </el-row>
 
-            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:79vh"
+            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="flex-grow: 1; overflow: auto;"
                 @selection-change="handleSelectionChange">
                 <el-table-column type="index" label="序号" width="55" align="center">
                 </el-table-column>
@@ -21,11 +21,11 @@
                 </el-table-column>
                 <el-table-column prop="territoryName" label="辖区名称" align="center">
                 </el-table-column>
+              <el-table-column prop="action" label="预警后行为" align="center">
+              </el-table-column>
                 <el-table-column prop="requestStatus" label="审批状态" align="center">
                 </el-table-column>
                 <el-table-column prop="requestDate" label="申请日期" align="center">
-                </el-table-column>
-                <el-table-column prop="approvalDate" label="批准日期" align="center">
                 </el-table-column>
                 <el-table-column prop="approvalDate" label="批准日期" align="center">
                 </el-table-column>
@@ -36,7 +36,9 @@
                     <template #default="scope">
                         <el-popconfirm title="确认要删除吗?" @confirm="deleteAction(scope.row)">
                             <template #reference>
-                                <el-button type="danger" :disable="checkState(scope.row)">撤回申请</el-button>
+                              <el-button type="danger" :disabled="checkState(scope.row)"
+                                         @click="revokeApply(scope.row.changeRequestId)">撤回申请
+                              </el-button>
                             </template>
                         </el-popconfirm>
                     </template>
@@ -44,7 +46,7 @@
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                 :current-page="currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="pageSize"
-                layout="total, sizes, prev, pager, next, jumper" :total="allTerritory.length">
+                layout="total, sizes, prev, pager, next, jumper" :total="allTerritory.length"  style="margin-top: auto;">
             </el-pagination>
         </div>
     </el-card>
@@ -55,7 +57,7 @@
 
 <script>
 import { ElMessage } from 'element-plus'
-import { get, post, del, put } from '@/utils/request';
+import { get } from '@/utils/request'
 
 export default {
     data() {
@@ -85,43 +87,36 @@ export default {
 
     },
     methods: {
-        checkState(row) {
-            if(row.requestStatus == 'pending'){
-                return false
-            }
-        },
-        askForTerritory(row) {
-            let tokenData = localStorage.getItem('loginData')
-            tokenData = JSON.parse(tokenData)
-            get('/territory/requestChanges', { userId: tokenData.id, territoryIds: row.territoryId }, true).then(res => {
-                if (res.data.success === true) {
-                    ElMessage({
-                        message: '申请成功',
-                        type: 'success',
-                    });
-
-                    location.reload();
-                } else {
-                    ElMessage({
-                        message: res.data.message,
-                        type: 'error',
-                    });
-                }
+      revokeApply(changeRequestId) {
+        get('/territory/', {id:changeRequestId}, true).then(res => {
+          if (res.data.success === true) {
+            this.allTerritory = res.data.data
+          } else {
+            ElMessage({
+              message: '请求失败',
+              type: 'error'
             })
-        },
-        getAllTerritory() {
+          }
+        })
+
+      },
+      checkState(row) {
+        return row.requestStatus !== '处理中'
+
+      },
+      getAllTerritory() {
             get('/territory/getApproveState', {}, true).then(res => {
                 if (res.data.success === true) {
                     this.allTerritory = res.data.data
-                    for (var i = 0; i < this.allTerritory.length; i++) {
-                        if (this.allTerritory[i].requestStatus == 'refuse') {
-                            this.allTerritory[i].requestStatus = "驳回"
-                        } else if (this.allTerritory[i].requestStatus == 'pending') {
-                            this.allTerritory[i].requestStatus = "处理中"
-                        } else if (this.allTerritory[i].requestStatus == 'agree') {
-                            this.allTerritory[i].requestStatus = "批准"
-                        } else {
-                            this.allTerritory[i].requestStatus = "未知状态"
+                  for (const element of this.allTerritory) {
+                    if (element.requestStatus === 'refuse') {
+                      element.requestStatus = '驳回'
+                    } else if (element.requestStatus === 'pending') {
+                      element.requestStatus = '处理中'
+                    } else if (element.requestStatus === 'agree') {
+                      element.requestStatus = '批准'
+                    } else {
+                      element.requestStatus = '未知状态'
                         }
                     }
                 } else {
@@ -138,13 +133,6 @@ export default {
                 });
             });
 
-        },
-        submit(scope) {
-            scope.isopen = true
-        },
-
-        handleSelect(row) {
-            this.currentTable = row;
         },
     },
 

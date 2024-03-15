@@ -18,11 +18,6 @@ export default {
     this.timer = setInterval(function () {
       that.newDate = new Date().toLocaleString()
     })
-  },
-  eforeDestroy: function () {
-    if (this.timer) {
-      clearInterval(this.timer)
-    }
   }
 }
 </script>

@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router'
 export default {
+  //xxx:对路由做了简单封装,可以自动实现子路由的层级,但是如果想要作为一个父路由单独显示就也得声明为父子层级
   data() {
     return {
       activeIndex: this.$route.path,
@@ -47,7 +47,7 @@ export default {
       let routes = this.$router.options.routes;
       const userInfo = JSON.parse(localStorage.getItem('loginData'));
       const userRole = userInfo ? userInfo.role : null;
-      const returnData = routes.filter(route => {
+      return routes.filter(route => {
         if (route.hidden) {
           return false;
         }
@@ -56,12 +56,10 @@ export default {
         }
         return false;
       });
-
-      return returnData;
     },
 
     checkUrl(baseurl, childurl) {
-      if (childurl == '') {
+      if (childurl === '') {
         return baseurl
       } else {
         return baseurl + '/' + childurl

@@ -7,7 +7,6 @@ import 'element-plus/dist/index.css'
 
 import * as ElIconModules from '@element-plus/icons-vue'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import echarts from 'echarts'
 
 const app = createApp(App)
 for(let iconName in ElIconModules){

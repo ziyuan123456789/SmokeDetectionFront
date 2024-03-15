@@ -184,11 +184,7 @@
   </el-card>
 </template>
 <script>
-import HelloWorld from "@/components/HelloWorld.vue";
-import axios from 'axios'
-import * as echarts from 'echarts';
-import videojs from 'video.js'
-import 'video.js/dist/video-js.css'
+
 
 export default {
   name: "HomeView",
