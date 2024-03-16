@@ -4,7 +4,7 @@
   </div>
 <!--  <div v-else-if="territoriesList.length === 1" v-on:load="redirectToDetailPage"></div>-->
   <div v-else>
-    <el-card>
+    
       <el-row :gutter="20">
         <el-col :span="12" v-for="(territory, index) in territoriesList.slice(0, 2)" :key="index">
           <TerritorySocketShow
@@ -27,7 +27,7 @@
           <el-empty description="未分配辖区" />
         </el-col>
       </el-row>
-    </el-card>
+  
   </div>
 </template>
 <script>
@@ -42,6 +42,8 @@ export default {
   data() {
     return {
       territoriesList: [{ id: 1, name: '厨房', confidenceLevel: 0.7 },
+        { id: 2, name: '客厅', confidenceLevel: 0.6 },
+        { id: 2, name: '客厅', confidenceLevel: 0.6 },
         { id: 2, name: '客厅', confidenceLevel: 0.6 }],
       icon: '',
       tableData: [

@@ -27,10 +27,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
   height: 45px;
   background-color: #F4A460;
-  padding: 0 20px;
+  
 }
 
 .title {
@@ -38,6 +37,7 @@ export default {
   color: #FFFFFF;
   line-height: 60px;
   font-weight: bold;
+  padding-left: 20px;
 }
 
 .tools {

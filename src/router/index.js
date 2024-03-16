@@ -135,8 +135,45 @@ const routes = [
         meta: {
           name: '推送截图'
         },
-        component: () => import('../views/main.vue')
+        component: () => import('../views/Pages/AdminPages/PushScreenshots.vue')
       },
+      {
+        path: 'PushScreenshots',
+        name: 'PushScreenshots',
+        cnName: '截图推送',
+        meta: {
+          name: '推送截图'
+        },
+        component: () => import('../views/Pages/AdminPages/PushScreenshots.vue')
+      },
+      {
+        path: 'PushScreenshots',
+        name: 'PushScreenshots',
+        cnName: '截图推送',
+        meta: {
+          name: '推送截图'
+        },
+        component: () => import('../views/Pages/AdminPages/PushScreenshots.vue')
+      },
+      {
+        path: 'PushScreenshots',
+        name: 'PushScreenshots',
+        cnName: '截图推送',
+        meta: {
+          name: '推送截图'
+        },
+        component: () => import('../views/Pages/AdminPages/PushScreenshots.vue')
+      },
+      {
+        path: 'PushScreenshots',
+        name: 'PushScreenshots',
+        cnName: '截图推送',
+        meta: {
+          name: '推送截图'
+        },
+        component: () => import('../views/Pages/AdminPages/PushScreenshots.vue')
+      },
+      
       {
         path: 'FilterScreenshots',
         name: 'FilterScreenshots',
