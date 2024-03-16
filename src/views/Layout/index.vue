@@ -34,7 +34,7 @@ export default {
 /* 侧边栏样式 */
 .layout-nav {
   position: fixed;
-  top: 50px; // 或者顶部栏的高度，如果顶部栏不是全宽度的话
+  top: 45px; // 或者顶部栏的高度，如果顶部栏不是全宽度的话
   left: 0;
   width: 200px; // 侧边栏的宽度
   height: 100vh; // 视口高度
@@ -45,14 +45,14 @@ export default {
 /* 主内容区样式 */
 #main-wrap {
   margin-left: 200px; // 侧边栏宽度
-  margin-top: 10px; // 顶部栏高度
+  margin-top: 15px; // 顶部栏高度
   position: fixed;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
   overflow-y: auto; // 主内容区滚动
- 
+
   border-bottom: none;
   box-sizing: border-box;
 }

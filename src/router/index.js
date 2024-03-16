@@ -68,14 +68,14 @@ const routes = [
         component: () => import('../views/Pages/AdminPages/HardwareContro.vue')
       },
       {
-        path: 'ActionContro',
-        name: 'ActionContro',
-        cnName: '行为管理',
+        path: 'ActionConfiguration',
+        name: 'ActionConfiguration',
+        cnName: '预警后行为配置',
         meta: {
-          name: '行为管理'
+          name: '预警后行为配置'
         },
         component: () => import('../views/Pages/AdminPages/ActionContro.vue')
-      }
+      },
     ]
   },
   {
@@ -107,15 +107,7 @@ const routes = [
       needRole: '1'
     },
     children: [
-      {
-        path: 'ActionConfiguration',
-        name: 'ActionConfiguration',
-        cnName: '预警后行为配置',
-        meta: {
-          name: '预警后行为配置'
-        },
-        component: () => import('../views/main.vue')
-      },
+
       {
         path: 'ThresholdManagement',
         name: 'ThresholdManagement',
