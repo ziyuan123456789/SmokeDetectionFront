@@ -125,7 +125,7 @@ export default {
 
 <style scoped>
 .containner {
-  margin-top: 20px;
+  height: 99%;
 }
 
 .el-table /deep/ .warning-row td {

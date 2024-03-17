@@ -1,13 +1,15 @@
 <template>
-  <el-container>
-    <el-header style="height:45px" >
+  <el-container style="height: 100vh;">
+    <el-header style="height: 45px;">
       <LayoutHeader />
     </el-header>
-    <el-container>
-      <el-aside width="200px">
+    <el-container style="height: calc(100vh - 50px);">
+      <el-aside width="200px" >
         <LayoutNav />
       </el-aside>
-      <el-main><layout-main /></el-main>
+      <el-main >
+        <layout-main />
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -16,23 +18,19 @@
 import LayoutHeader from './Headers/index.vue'
 import LayoutMain from './Main/Main.vue'
 import LayoutNav from './Nav/Nav.vue'
+
 export default {
   name: "LayoutIndex",
-  components: { LayoutMain, LayoutHeader, LayoutNav },
-  setup() {
-
-  }
+  components: { LayoutMain, LayoutHeader, LayoutNav }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .el-header {
-  padding: 0px !important;
-}
-.el-main{
   padding: 0 !important;
-  overflow-y: auto; /* Show vertical scrollbar when content overflows */
-  height: calc(100vh - 55px);
+}
+
+.el-main {
+  --el-main-padding:10px
 }
 </style>

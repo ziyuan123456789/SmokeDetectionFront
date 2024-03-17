@@ -1,6 +1,6 @@
 <template>
     <el-card class="containner">
-      <div style="display: flex; flex-direction: column; height: calc(100vh - 7vh);margin-top:10px">
+      <div>
             <el-row :gutter="20">
                 <el-col :span="4">
                     <el-input style="height:40px" v-model="input" placeholder="请输入指定用户"></el-input>
@@ -201,14 +201,16 @@ export default {
 </script>
 
 <style scoped>
-.containner {
-    margin-top: 20px;
-}
 
+.container{
+  height: 99%;
+}
 .el-table /deep/ .warning-row td {
     background: rgba(204, 224, 255, 0.477) !important;
 
 }
+
+
 
 
 

@@ -1,6 +1,6 @@
 <template>
     <el-card class="containner">
-        <div style="margin-top:10px">
+        <div >
             <el-row :gutter="20">
                 <el-col :span="4">
                     <el-input style="height:40px" v-model="filterId" placeholder="请输入指定编号" clearable
@@ -188,7 +188,7 @@ export default {
 
 <style scoped>
 .containner {
-    margin-top: 20px;
+  height: 99%;
 }
 
 .el-table /deep/ .warning-row td {

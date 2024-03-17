@@ -23,9 +23,5 @@ export default {
 </script>
 
 <style>
-.container {
-  padding: 0;
-  margin-right: 5px;
-  width: 100%;
-}
+
 </style>
