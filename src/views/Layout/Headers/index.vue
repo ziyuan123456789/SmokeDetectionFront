@@ -37,7 +37,7 @@ export default {
   color: #FFFFFF;
   line-height: 60px;
   font-weight: bold;
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 .tools {

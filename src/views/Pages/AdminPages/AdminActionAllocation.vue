@@ -92,6 +92,7 @@ export default {
             get('/territory/updateTerritoryChange', {approvalOutcome:isOk,changeRequestId:data.changeRequestId,requestedTerritoryId:data.requestedTerritoryId,remarks:data.remarks,userId:data.userId}, true).then(res => {
                 if (res.data.success === true) {
                     console.log(res.data.data)
+                  location.reload();
                 } else {
                     ElMessage({
                         message: '请求失败',

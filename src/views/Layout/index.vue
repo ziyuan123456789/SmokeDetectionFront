@@ -31,7 +31,8 @@ export default {
   padding: 0px !important;
 }
 .el-main{
+  padding: 0 !important;
   overflow-y: auto; /* Show vertical scrollbar when content overflows */
-  height: calc(100vh - 45px);
+  height: calc(100vh - 55px);
 }
 </style>

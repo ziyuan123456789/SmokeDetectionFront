@@ -1,5 +1,6 @@
 <template>
   <el-container>
+
     <el-aside width="200px" class="aside-menu">
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="vertical" @select="handleSelect"
         background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
@@ -98,12 +99,12 @@ export default {
 
 <style scoped>
 .aside-menu {
-  height: 100vh;
+  height: calc(100vh - 55px);
   overflow-y: auto;
 }
 
 .el-menu-demo {
-  height: 100%;
+  height: calc(100vh - 55px);
   border-right: none;
 }
 </style>

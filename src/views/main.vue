@@ -2,14 +2,14 @@
   <div v-if="territoriesList.length === 0">
     <el-empty description="暂无辖区信息" />
   </div>
-<!--  <div v-else-if="territoriesList.length === 1" v-on:load="redirectToDetailPage"></div>-->
+
   <div v-else>
     
       <el-row :gutter="20">
         <el-col :span="12" v-for="(territory, index) in territoriesList.slice(0, 2)" :key="index">
           <TerritorySocketShow
             :icon="icon"
-            :tableData="territory.tableData"
+            :tableData="tableData"
             :alertEnabled="territory.isAlertEnabled"
           />
         </el-col>
@@ -48,19 +48,12 @@ export default {
       icon: '',
       tableData: [
         {
-          date: '飞蛾',
-          name: '',
+          date: '今日预警次数',
+          name: '0',
         }, {
-          date: '印度谷螟',
-          name: '',
-        }, {
-          date: '鹿纹天蚕蛾',
-          name: '',
+          date: '自动截图次数',
+          name: '0',
         },
-        {
-          date: '总数',
-          name: '',
-        }
       ],
 
     };

@@ -25,7 +25,7 @@
               <el-button type="success">全屏</el-button>
             </div>
             <div class="control-item">
-              <el-button type="primary">展示不合格图片</el-button>
+              <el-button type="primary">展示预警图片</el-button>
             </div>
           </div>
         </el-col>
