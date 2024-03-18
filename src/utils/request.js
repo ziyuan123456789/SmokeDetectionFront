@@ -1,11 +1,7 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-
-const baseURL = 'http://localhost:8089'
-const instance = axios.create({
-  baseURL: baseURL,
-  timeout: 5000
-})
+import config from '/config.js'
+const instance = axios.create(config.serverConfig)
 
 instance.interceptors.request.use(
   (config) => {

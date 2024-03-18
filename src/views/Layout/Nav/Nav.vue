@@ -1,6 +1,5 @@
 <template>
-  <el-container>
-    <el-aside width="200px" class="aside-menu">
+  <div  class="aside-menu">
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="vertical" @select="handleSelect"
         background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
         <template v-for="item in menuItems()" :key="item.path">
@@ -15,8 +14,8 @@
           </el-sub-menu>
         </template>
       </el-menu>
-    </el-aside>
-  </el-container>
+  </div>
+
 </template>
 
 <script>
@@ -98,12 +97,10 @@ export default {
 
 <style scoped>
 .aside-menu {
-  height: calc(100vh - 50px);
-  overflow-y: auto;
+  height: calc(100%);
 }
 
 .el-menu-demo {
-  height: calc(100vh - 50px);
-  border-right: none;
+  height: calc(100%);
 }
 </style>
