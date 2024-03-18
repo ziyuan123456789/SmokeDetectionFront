@@ -92,6 +92,7 @@ export default {
       this.menuVisible = false
     },
     pushImage() {
+
       console.log('推送图片')
       this.menuVisible = false
     },
