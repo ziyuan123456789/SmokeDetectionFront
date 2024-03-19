@@ -26,9 +26,10 @@
       <div
         v-if="menuVisible"
         class="context-menu"
+        @contextmenu.prevent
         :style="{ top: `${menuPosition.y}px`, left: `${menuPosition.x}px` }"
       >
-        <div class="button-wrapper">
+        <div class="button-wrapper" >
 
           <el-button size="mini"  type="primary" @click="viewImage">详情</el-button>
           <el-button size="mini" class="wtf" type="danger" @click="deleteImage">删除</el-button>
@@ -106,13 +107,14 @@ export default {
       this.data.year=this.selectedOptions[1]
       this.data.day=this.selectedOptions[2]
       this.selectedOptions=[]
+      this.images= []
       this.componentKey++
       get('/images/getPics', this.data, true).then(res => {
         if (res.data.success === true) {
-          for (let i = 0; i < res.data.data.length; i++) {
+          for (const element of res.data.data) {
             this.images.push({
-              name: res.data.data[i],
-              url: this.getImageUrl(res.data.data[i])
+              name: element,
+              url: this.getImageUrl(element)
             })
           }
         } else {

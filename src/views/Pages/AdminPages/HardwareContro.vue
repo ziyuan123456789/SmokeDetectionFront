@@ -11,7 +11,7 @@
                         @click="dialogVisibleAddHardware = true">添加硬件配置</el-button>
                 </el-col>
             </el-row>
-            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:79vh">
+            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:75vh">
                 <el-table-column type="index" label="序号" width="80px" align="center">
                 </el-table-column>
                 <el-table-column prop="hardwareSettingId" label="内部编号" align="center">

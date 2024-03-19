@@ -1,6 +1,6 @@
 <template>
     <el-card class="containner">
-        <div style="margin-top:10px">
+        <div>
             <el-row :gutter="20">
                 <el-col :span="4">
                     <el-input style="height:40px" v-model="input" placeholder="请输入指定用户"></el-input>
@@ -13,7 +13,7 @@
                 </el-col>
             </el-row>
 
-            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:79vh"
+            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:75vh"
                 @selection-change="handleSelectionChange" empty-text="暂无新申请">
                 <el-table-column type="index" label="序号" width="55" align="center">
                 </el-table-column>

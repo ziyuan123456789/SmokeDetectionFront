@@ -1,6 +1,5 @@
 <template>
     <el-card class="containner">
-
             <el-row :gutter="20">
                 <el-col :span="4">
                     <el-input style="height:40px" v-model="filterId" placeholder="请输入指定编号" clearable
@@ -11,7 +10,7 @@
                         @click="dialogVisibleAddAction = true">添加行为配置</el-button>
                 </el-col>
             </el-row>
-            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:79vh">
+            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:75vh">
                 <el-table-column type="index" label="序号" width="80px" align="center">
                 </el-table-column>
                 <el-table-column prop="territoryConfigurationId" label="内部编号" align="center">

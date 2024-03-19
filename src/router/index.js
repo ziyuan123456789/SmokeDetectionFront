@@ -167,13 +167,13 @@ const routes = [
         component: () => import('../views/Pages/AdminPages/AdminActionAllocation.vue')
       },
       {
-        path: 'CourseMaintenance',
-        name: 'CourseMaintenance',
+        path: 'UserControl',
+        name: 'UserControl',
         cnName: '用户筛查',
         meta: {
           name: '用户筛查'
         },
-        component: () => import('../views/main.vue')
+        component: () => import('../views/Pages/AdminPages/UserContro.vue')
       }
     ]
   },

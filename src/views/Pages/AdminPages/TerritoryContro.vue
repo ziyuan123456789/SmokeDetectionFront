@@ -1,7 +1,7 @@
 <template>
     <el-card class="containner">
         <div >
-            <el-row :gutter="20">
+            <el-row :gutter="20" >
                 <el-col :span="4">
                     <el-input style="height:40px" v-model="input" placeholder="请输入指定用户"></el-input>
                 </el-col>
@@ -15,7 +15,7 @@
                     <el-button style="height:40px" type="warning" @click="addTerritory()">添加辖区</el-button>
                 </el-col>
             </el-row>
-            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:79vh">
+            <el-table :data="pagedTableData" :row-class-name="tableRowClassName" style="height:75vh">
                 <el-table-column type="index" label="序号" width="55" align="center">
                 </el-table-column>
                 <el-table-column prop="territoryId" label="内部编号" align="center" >
