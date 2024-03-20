@@ -1,11 +1,11 @@
 <template>
-  <el-card class="imgscard" shadow="always">
+
     <div class="image-container">
       <img :src="icon" class="image-style" />
     </div>
     <el-card shadow="always" class="statistic-card">
       <el-row :gutter="20">
-        <el-col :span="15">
+        <el-col :span="16">
           <el-table :data="tableData">
             <el-table-column prop="date" label="类别">
             </el-table-column>
@@ -13,7 +13,7 @@
             </el-table-column>
           </el-table>
         </el-col>
-        <el-col :span="9">
+        <el-col :span="8">
           <div class="controls-container">
             <div class="control-item" style="color:#FFD04B ;font-family:Arial;">
               <span>当前预警阈值: 20%</span>
@@ -31,7 +31,7 @@
         </el-col>
       </el-row>
     </el-card>
-  </el-card>
+
 </template>
 
 <script>
