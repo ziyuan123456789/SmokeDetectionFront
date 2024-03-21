@@ -4,14 +4,22 @@ import config from '/config.js'
 
 const instance = axios.create(config.serverConfig)
 
-// Function to refresh token
 async function refreshToken() {
-  let refreshToken = localStorage.getItem('loginData');
-  refreshToken = JSON.parse(refreshToken)
-  if (!refreshToken) {
+  let loginData = localStorage.getItem('loginData');
+  if (!loginData) {
     return Promise.reject(new Error('没有刷新令牌'));
   }
-  const response = await axios.post(config.serverConfig.refreshTokenUrl, { refresh_token: refreshToken.refresh_token});
+
+  loginData = JSON.parse(loginData);
+  const refreshToken = loginData.refresh_token;
+  if (!refreshToken) {
+    return Promise.reject(new Error('刷新令牌缺失'));
+  }
+  const response = await axios.post(config.serverConfig.refreshTokenUrl, {}, {
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
+    }
+  });
   return response.data;
 }
 

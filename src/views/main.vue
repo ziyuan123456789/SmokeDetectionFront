@@ -33,7 +33,8 @@
 <script>
 
 import TerritorySocketShow from '@/components/TerritorySocketShow.vue'
-
+import { get, post, del, put } from '@/utils/request';
+import { ElMessage } from 'element-plus'
 export default {
   components: {
     TerritorySocketShow
@@ -60,6 +61,19 @@ export default {
   },
 
   mounted() {
+    get('/territory/getUserTerritories', null, true).then(res => {
+      if (res.data.success === true) {
+        ElMessage({
+          message: '更改成功',
+          type: 'success',
+        });
+      } else {
+        ElMessage({
+          message: '服务器内部错误',
+          type: 'error',
+        });
+      }
+    })
     this.connectWebSocket();
   },
   methods: {

@@ -59,6 +59,15 @@ const routes = [
         component: () => import('../views/Pages/AdminPages/TerritoryContro.vue')
       },
       {
+        path: 'test',
+        name: 'test',
+        cnName: 'test',
+        meta: {
+          name: 'test'
+        },
+        component: () => import('../views/Pages/AdminPages/test.vue')
+      },
+      {
         path: 'HardwareContro',
         name: 'HardwareContro',
         cnName: '硬件管理',
