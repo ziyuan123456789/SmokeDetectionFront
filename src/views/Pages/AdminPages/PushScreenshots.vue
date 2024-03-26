@@ -68,6 +68,7 @@ export default {
   },
   methods: {
     handleContextMenu(event, index) {
+      //xxx:简单做了个遮罩层,但是在边缘依然可能导致父层级溢出
       this.currentImage = this.images[index]
       this.currentIndex = index
       const clickX = event.clientX

@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '../views/Layout/index.vue'
 import { ElMessage } from 'element-plus'
-
+// 路由配合侧边栏可以实现自动配置
+// component:套用指定布局
+// 父层级meta:needrole指定路由权限,结合路由护卫可以防止界面越权访问,但是f12改本地存储是可以绕过的,不过后台加了拦截器
+// 如果你们想让侧边栏只有一层而不展开,那么也需要写一个child,如果写了两个及以上的child侧边栏会处理成展开显示
+// cnName:阅览器标签页显示的名字
 const routes = [
   {
     path: '/:catchAll(.*)',
@@ -40,6 +44,7 @@ const routes = [
       }
     ]
   },
+
   {
     path: '/Territory',
     name: 'Territory',
@@ -57,15 +62,6 @@ const routes = [
           name: '辖区管理'
         },
         component: () => import('../views/Pages/AdminPages/TerritoryContro.vue')
-      },
-      {
-        path: 'test',
-        name: 'test',
-        cnName: 'test',
-        meta: {
-          name: 'test'
-        },
-        component: () => import('../views/Pages/AdminPages/test.vue')
       },
       {
         path: 'HardwareContro',
@@ -282,7 +278,7 @@ const router = createRouter({
   routes
 })
 
-const notNeedLogin = ['LoginPage']
+const notNeedLogin = ['LoginPage','Reg']
 
 router.beforeEach((to, from, next) => {
   const loginData = localStorage.getItem('loginData')

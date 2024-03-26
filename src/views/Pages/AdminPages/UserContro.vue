@@ -42,7 +42,7 @@
               :disabled ="row.role === '1' "
               @click="toggleUserStatus(row)"
             >
-              {{ row.enabled == '1 '? '封禁用户' : '解封用户' }}
+              {{ row.enabled == '1'? '封禁用户' : '解封用户' }}
             </el-button>
           </template>
         </el-table-column>
@@ -59,7 +59,7 @@
 <script>
 import { ElMessage } from 'element-plus'
 import { get } from '@/utils/request'
-
+import { ElNotification } from 'element-plus'
 export default {
   data() {
     return {
@@ -90,6 +90,18 @@ export default {
 
   },
   methods: {
+    viewTerritories(row){
+      get('/userControl/getUserTerritories', {id:row.userID}, true).then(res => {
+          if(res.data.data.length===0){
+            ElNotification({
+              title: 'Warning',
+              message: row.username+'当前没有任何辖区',
+              type: 'warning',
+            })
+          }
+      })
+    },
+
     toggleUserStatus(row){
       if(row.enabled===1){
         get('/userControl/ban', {id:row.userID}, true).then(res => {

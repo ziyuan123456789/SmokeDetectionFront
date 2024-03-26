@@ -6,7 +6,7 @@
             <el-form-item label="用户名" prop="username" required>
                 <el-input v-model="form.username"></el-input>
             </el-form-item>
-            <!-- 邮箱 -->
+            <!-- 电话 -->
             <el-form-item label="电话" prop="telephone" required>
                 <el-input v-model="form.telephone"></el-input>
             </el-form-item>
@@ -21,7 +21,7 @@
             <el-form-item>
                 <div class="form-buttons">
                     <el-button type="primary" @click="submitForm()">注册</el-button>
-                    <el-button>取消</el-button>
+                    <el-button >取消</el-button>
                 </div>
             </el-form-item>
         </el-form>
@@ -29,6 +29,7 @@
 </template>
 <script>
 import { get, post, del, put } from '@/utils/request';
+import { ElMessage } from 'element-plus'
 export default {
     name: "Register",
     data() {
@@ -78,13 +79,13 @@ export default {
                 if (response.data.success === true) {
                     localStorage.setItem('loginData', JSON.stringify(response.data.data));
                     ElMessage({
-                        message: '登录成功',
+                        message: '注册成功',
                         type: 'success',
                     });
-                    this.$router.push("/");
+                    this.$router.push("/login");
                 } else {
                     ElMessage({
-                        message: '登录失败',
+                        message: '注册失败',
                         type: 'error',
                     });
                 }

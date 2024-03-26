@@ -16,7 +16,11 @@
           <el-option label="用户" value="0"></el-option>
         </el-select>
       </el-form-item>
-
+      <div style="text-align: center; margin-bottom: 15px;">
+        <a href="/Reg" style="color: #409EFF; text-decoration: none; transition: color 0.3s;">
+          注册新账户
+        </a>
+      </div>
 
       <div style="text-align: center;">
         <el-button type="primary" @click="submitForm()">确定</el-button>
@@ -29,8 +33,9 @@
 </template>
 
 <script>
-import { get, post, del, put } from '@/utils/request';
+import { get } from '@/utils/request'
 import { ElMessage } from 'element-plus'
+
 export default {
   name: "Login",
   data() {
