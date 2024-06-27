@@ -33,7 +33,7 @@
                 <el-table-column align="center" label="操作" min-width="240">
                     <template #default="scope">
                         <div class="button-group" style="text-align:center">
-                            <el-button type="success" @click="rating(scope.row)">查看拥有者</el-button>
+<!--                            <el-button type="success" @click="rating(scope.row)">查看拥有者</el-button>-->
                             <el-button type="warning" @click="hardwareOptions = [
             ]; alertActions = [
             ], selectInit(); changeTerritory = scope.row; dialogVisibleChangeTerritory = true">编辑辖区</el-button>

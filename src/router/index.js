@@ -83,47 +83,47 @@ const routes = [
       },
     ]
   },
-  {
-    path: '/Statistics',
-    name: 'Statistics',
-    cnName: '统计信息',
-    component: Layout,
-    meta: {
-      needRole: '1'
-    },
-    children: [
-      {
-        path: '',
-        name: 'Statistics',
-        cnName: '统计信息',
-        meta: {
-          name: '统计信息'
-        },
-        component: () => import('../views/main.vue')
-      }
-    ]
-  },
-  {
-    path: '/AlarmManagement',
-    name: 'AlarmManagement',
-    cnName: '警报管理',
-    component: Layout,
-    meta: {
-      needRole: '1'
-    },
-    children: [
-
-      {
-        path: 'ThresholdManagement',
-        name: 'ThresholdManagement',
-        cnName: '配置预警阈值',
-        meta: {
-          name: '预警后行为配置'
-        },
-        component: () => import('../views/main.vue')
-      }
-    ]
-  },
+  // {
+  //   path: '/Statistics',
+  //   name: 'Statistics',
+  //   cnName: '统计信息',
+  //   component: Layout,
+  //   meta: {
+  //     needRole: '1'
+  //   },
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'Statistics',
+  //       cnName: '统计信息',
+  //       meta: {
+  //         name: '统计信息'
+  //       },
+  //       component: () => import('../views/Pages/UserPages/DataAnalysisUser.vue')
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/AlarmManagement',
+  //   name: 'AlarmManagement',
+  //   cnName: '警报管理',
+  //   component: Layout,
+  //   meta: {
+  //     needRole: '1'
+  //   },
+  //   children: [
+  //
+  //     {
+  //       path: 'ThresholdManagement',
+  //       name: 'ThresholdManagement',
+  //       cnName: '配置预警阈值',
+  //       meta: {
+  //         name: '预警后行为配置'
+  //       },
+  //       component: () => import('../views/main.vue')
+  //     }
+  //   ]
+  // },
   {
     path: '/ScreenshotManagement',
     name: 'ScreenshotManagement',
@@ -140,17 +140,17 @@ const routes = [
         meta: {
           name: '推送截图'
         },
-        component: () => import('../views/Pages/AdminPages/PushScreenshots.vue')
+        component: () => import('../views/Pages/AdminPages/AdminPushScreenshots.vue')
       },
-      {
-        path: 'FilterScreenshots',
-        name: 'FilterScreenshots',
-        cnName: '截图过滤',
-        meta: {
-          name: '截图过滤'
-        },
-        component: () => import('../views/main.vue')
-      }
+      // {
+      //   path: 'FilterScreenshots',
+      //   name: 'FilterScreenshots',
+      //   cnName: '截图过滤',
+      //   meta: {
+      //     name: '截图过滤'
+      //   },
+      //   component: () => import('../views/main.vue')
+      // }
     ]
   },
   {
@@ -195,21 +195,39 @@ const routes = [
   {
     path: '/UserScreenshot',
     name: 'UserScreenshot',
-    cnName: '查看截图',
+    cnName: '截图管理',
     meta: {
       needRole: '0'
     },
     component: Layout,
     children: [
       {
-        path: '',
-        name: 'MyTerritory',
-        cnName: '我的辖区',
+        path: 'allPic',
+        name: 'allPic',
+        cnName: '全部图片',
         meta: {
-          name: '我的辖区'
+          name: '全部图片'
         },
-        component: () => import('../views/Pages/UserPages/MyTerritory.vue')
-      }
+        component: () => import('../views/Pages/UserPages/GetScreenShots.vue')
+      },
+      {
+        path: 'adminPush',
+        name: 'adminPush',
+        cnName: '管理员推送',
+        meta: {
+          name: '管理员推送'
+        },
+        component: () => import('../views/Pages/UserPages/importPic.vue')
+      },
+      // {
+      //   path: 'myFavourite',
+      //   name: 'myFavourite',
+      //   cnName: '我的收藏',
+      //   meta: {
+      //     name: '我的收藏'
+      //   },
+      //   component: () => import('../views/Pages/UserPages/GetScreenShots.vue')
+      // },
     ]
   },
   {
@@ -268,6 +286,46 @@ const routes = [
           name: '个人中心'
         },
         component: () => import('../views/Pages/UserInfo/UserInfo.vue')
+      }
+    ]
+  },
+
+
+  {
+    path: '/DataAnalysis',
+    name: 'DataAnalysis',
+    cnName: '数据统计',
+    component: Layout,
+    children: [
+      {
+        path: '',
+        name: 'DataAnalysis',
+        cnName: '数据统计',
+        meta: {
+          name: '数据统计'
+        },
+        component: () => import('../views/Pages/UserPages/DataAnalysisUser.vue')
+      }
+    ]
+  },
+
+
+
+  {
+    path: '/territoryDetailPage',
+    name: 'territoryDetailPage',
+    cnName: '辖区监控详情',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '',
+        name: 'territoryDetailPage',
+        cnName: '辖区监控详情',
+        meta: {
+          name: '辖区监控详情'
+        },
+        component: () => import('../views/Pages/CommonPages/TerritoryDetailPage.vue')
       }
     ]
   }

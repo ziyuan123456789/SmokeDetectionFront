@@ -39,6 +39,20 @@
       </div>
     </el-main>
   </el-container>
+  <el-dialog v-model="dialogVisiblePic" title="查看图片详情" width="85%">
+    <el-row gutter="20">
+      <el-col :span="14">
+        <img :src="currentImage.url" alt="查看的图片" style="width: 100%; height: auto;" />
+      </el-col>
+      <el-col :span="10">
+        <h3>图片详情</h3>
+        <p>辖区: {{ territoryId }}</p>
+        <p>置信度: {{ confidence }}</p>
+        <p>创建时间: {{ createTime }}</p>
+      </el-col>
+    </el-row>
+
+  </el-dialog>
 </template>
 
 
@@ -59,7 +73,11 @@ export default {
       menuVisible: false,
       menuPosition: { x: 0, y: 0 },
       currentImage: null,
-      currentIndex: -1
+      currentIndex: -1,
+      dialogVisiblePic: false,
+      territoryId: '',
+      confidence: '',
+      createTime: '',
 
     }
   },
@@ -86,16 +104,38 @@ export default {
     },
 
     viewImage() {
-      console.log('查看图片：', this.currentImage, ' 索引：', this.currentIndex)
+      this.dialogVisiblePic = true
+      console.log(this.currentImage.name)
+      const regex = /smoke_face_(\d+)_([0-9]+\.[0-9]{2})[0-9]*_(\d+)\.jpg/
+
+      const matches = this.currentImage.name.match(regex)
+      if (matches) {
+        this.territoryId = matches[1]
+        this.confidence = matches[2]
+        this.createTime = new Date(parseInt(matches[3]) * 1000).toLocaleString()
+      }
       this.menuVisible = false
+      console.log('查看图片：', this.currentImage, ' 索引：', this.currentIndex)
+
     },
     deleteImage() {
       console.log('删除图片')
       this.menuVisible = false
     },
     pushImage() {
-
-      console.log('推送图片')
+      get('/images/pushImage', { picName: this.currentImage.name }, true).then(res => {
+        if (res.data.success === true) {
+          ElMessage({
+            message: '推送成功',
+            type: 'success'
+          })
+        } else {
+          ElMessage({
+            message: '推送失败,此图片已经被推送',
+            type: 'error'
+          })
+        }
+      })
       this.menuVisible = false
     },
     //xxx:简直是一个操蛋到不行的设计,实在找不到比el-cascader-panel更合适的组件了,但是选中后不能自动关闭,只能清空双向绑定再刷新组件

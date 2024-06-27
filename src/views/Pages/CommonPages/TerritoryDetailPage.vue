@@ -1,37 +1,45 @@
 <template>
-    <div class="image-container">
-      <img :src="icon" class="image-style" />
-    </div>
-    <el-card shadow="always" class="statistic-card">
-      <el-row :gutter="20">
-        <el-col :span="16">
-          <el-table :data="tableData">
-            <el-table-column prop="data" label="类别">
-            </el-table-column>
-            <el-table-column prop="name" label="数量">
-            </el-table-column>
-          </el-table>
-        </el-col>
-        <el-col :span="8">
-          <div class="controls-container">
+  <div class="image-container">
+    <img :src="icon" class="image-style" />
+  </div>
+  <el-card shadow="always" class="statistic-card">
+    <el-row :gutter="20">
+      <el-col :span="15">
+        <el-table :data="tableData">
+          <el-table-column prop="data" label="类别">
+          </el-table-column>
+          <el-table-column prop="name" label="数量">
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="9">
+        <el-row>
+          <el-col :span="10">
             <div class="control-item" style="color:#FFD04B ;font-family:Arial;">
               <span>当前预警阈值: {{ territory.confidenceLevel * 100 }}%</span>
             </div>
             <div class="control-item">
               <el-switch v-model="alertEnabled" inactive-text="是否跟随?"></el-switch>
             </div>
-            <div class="control-item">
-              <el-button type="success" size="small" @click="toggleFullScreen">全屏</el-button>
 
-              <el-button type="warning" size="small" @click="dialogVisibleChange=true">修改阈值</el-button>
+          </el-col>
+          <el-col :span="14">
+            <div style="margin-left: 30px">
+              <div style="margin-bottom: 5px">
+                <el-button type="success" @click="$router.push('/')">取消全屏</el-button>
+              </div>
+              <div>
+                <el-button type="warning" @click="dialogVisibleChange=true">修改阈值</el-button>
+              </div>
+              <div style="margin-top: 5px">
+                <el-button type="primary">展示预警图片</el-button>
+              </div>
             </div>
-            <div class="control-item">
-              <el-button type="primary" @click="goToUserScreenshot">展示预警图片</el-button>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </el-card>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+  </el-card>
   <el-dialog v-model="dialogVisibleChange" title="修改报警阈值" width="45%">
     <el-input-number v-model="territory.confidenceLevel" :min="0.1" :precision="2" :step="0.05" :max="0.95" />
 
@@ -51,22 +59,20 @@
 <script>
 import { get } from '@/utils/request'
 import { ElMessage } from 'element-plus'
-import { ElMessageBox } from 'element-plus'
+
 export default {
-  name: 'TerritoryCard',
-  props: {
-    territory: Object,
-  },
   data() {
     return {
       ws: null,
-      wsData:null,
+      wsData: null,
       icon: '',
-      dialogVisibleChange:false,
-      tableData:[]
+      dialogVisibleChange: false,
+      tableData: [],
+      territory: {}
     }
   },
   mounted() {
+    this.territory = JSON.parse(localStorage.getItem('territory'))
     this.connectWebSocket()
     this.connectWebSocketData()
   },
@@ -78,25 +84,16 @@ export default {
   },
 
   methods: {
-    goToUserScreenshot() {
-      // 使用编程式导航跳转到指定路由
-      this.$router.push({ name: 'allPic' });
-    },
-    toggleFullScreen() {
-      this.$emit('button-clicked', { message: this.territory})
-
-    },
-
     closeWebSocket() {
-    if (this.ws) {
-      this.ws.close()
-    }
-    if (this.wsData){
-      this.wsData.close()
-    }
+      if (this.ws) {
+        this.ws.close()
+      }
+      if (this.wsData) {
+        this.wsData.close()
+      }
 
-  },
-    submitchange(){
+    },
+    submitchange() {
       get('/territory/changeConfidenceLevel', {
         level: this.territory.confidenceLevel,
         territoryId: this.territory.territoryId
@@ -114,41 +111,35 @@ export default {
         }
       })
     },
-    connectWebSocketData(){
+    connectWebSocketData() {
       let tokenData = localStorage.getItem('loginData')
       tokenData = JSON.parse(tokenData)
       const wsUrl = `ws://127.0.0.1:8000/wsGetData?territoryId=${this.territory.territoryId}&token=${tokenData.token}`
       this.wsData = new WebSocket(wsUrl)
       this.wsData.onmessage = (event) => {
         try {
-          const data = JSON.parse(event.data);
-          if (data.alarm.toString()==="1"){
-            ElMessageBox.alert(this.territory.territoryId+'辖区发现异常,请您派人现场查看', '发现异常火源或烟雾,请尽快处理', {
-              confirmButtonText: '确定',
-              type: 'warning'
-            });
-          }
+          const data = JSON.parse(event.data)
           this.tableData = [
             {
               data: '今日预警次数',
-              name: data.day.toString(),
+              name: data.day.toString()
             },
             {
               data: '本月预警人数',
-              name: data.month.toString(),
+              name: data.month.toString()
             },
             {
               data: '人脸缓存区大小',
-              name: data.cache.toString(),
-            },
-          ];
+              name: data.cache.toString()
+            }
+          ]
         } catch (error) {
-          console.error('Error parsing message data:', error);
+          console.error('Error parsing message data:', error)
         }
-      };
+      }
 
       this.wsData.onerror = (error) => {
-        console.log('服务器关闭')
+        console.log('服务器关闭连接')
       }
 
       this.wsData.onclose = () => {
@@ -176,7 +167,7 @@ export default {
       }
 
       this.ws.onerror = (error) => {
-        console.log('服务器关闭')
+        console.log('服务器关闭连接')
       }
 
       this.ws.onclose = () => {
@@ -186,7 +177,7 @@ export default {
           this.icon = null
         }
       }
-    },
+    }
   }
 }
 </script>
